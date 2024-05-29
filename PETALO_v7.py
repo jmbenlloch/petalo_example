@@ -32,19 +32,7 @@ def connect_server(window):
                }
 
     try:
-        window.tx_stopper.set()
-        window.thread_TXRX.join()
-    except:
-        pass
-    window.tx_stopper.clear()
-
-    # Empty cmd queue
-    for i in range(window.tx_queue.unfinished_tasks):
-        window.tx_queue.get(i)
-        window.tx_queue.task_done()
-
-    try:
-        window.thread_TXRX  = SCK_TXRX(cfg_data,window.tx_queue,window.rx_queue,window.tx_stopper)
+        window.thread_TXRX  = SCK_TXRX(cfg_data,window.tx_queue,window.rx_queue)
         window.thread_TXRX.daemon = True
         window.thread_TXRX.start()
     except ConnectionRefusedError as e:

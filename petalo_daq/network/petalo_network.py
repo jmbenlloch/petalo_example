@@ -147,7 +147,6 @@ class SCK_TXRX(Thread):
         Designed to run as TXRX thread
 
         Parameters (General)
-        'stopper'     : Flag to stop thread execution
         'queue'       : Queue to send data
 
         Parameters (taken from UC data)
@@ -156,12 +155,11 @@ class SCK_TXRX(Thread):
         'buffer_size' : Size of data to receive
     """
 
-    def __init__(self, config, tx_queue, rx_queue, stopper):
+    def __init__(self, config, tx_queue, rx_queue):
         super(SCK_TXRX,self).__init__()
         self.config     = config
         self.queue      = tx_queue
         self.out_queue  = rx_queue
-        self.stopper    = stopper
         self.M          = MESSAGE()
         self.s = sk.socket(sk.AF_INET, sk.SOCK_STREAM)
         # ADD TIMEOUT Mechanism !!!!
@@ -191,7 +189,7 @@ class SCK_TXRX(Thread):
 
 
     def run(self):
-        while not self.stopper.is_set():
+        while True:
             try:
                 self.item = self.queue.get(True,timeout=0.25)
                 # Timeout should decrease computational load
